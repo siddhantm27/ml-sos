@@ -1,0 +1,38 @@
+\contentsline {section}{\numberline {1}Objective}{3}{section.1}%
+\contentsline {section}{\numberline {2}Introduction}{3}{section.2}%
+\contentsline {section}{\numberline {3}Categories in Machine Learning}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Supervised Learning}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Unsupervised Learning}{3}{subsection.3.2}%
+\contentsline {section}{\numberline {4}Supervised Learning Algorithms}{4}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Linear Regression}{4}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Polynomial Regression}{5}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Logistic Regression}{5}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Naive Bayes}{5}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Git Init}{6}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Git Add}{6}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Git Remove}{6}{subsection.4.7}%
+\contentsline {subsection}{\numberline {4.8}Git Commit}{6}{subsection.4.8}%
+\contentsline {subsection}{\numberline {4.9}Git Checkout}{6}{subsection.4.9}%
+\contentsline {subsection}{\numberline {4.10}Git Log}{7}{subsection.4.10}%
+\contentsline {subsection}{\numberline {4.11}Git Head}{7}{subsection.4.11}%
+\contentsline {subsection}{\numberline {4.12}Graphs}{7}{subsection.4.12}%
+\contentsline {subsection}{\numberline {4.13}Stats}{7}{subsection.4.13}%
+\contentsline {subsection}{\numberline {4.14}Report Card}{7}{subsection.4.14}%
+\contentsline {subsection}{\numberline {4.15}Help}{7}{subsection.4.15}%
+\contentsline {section}{\numberline {5}Working}{7}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Upload}{7}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Total}{7}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Combine}{8}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Update}{8}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Rank}{9}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Git Init}{9}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}Git Add}{9}{subsection.5.7}%
+\contentsline {subsection}{\numberline {5.8}Git Remove}{9}{subsection.5.8}%
+\contentsline {subsection}{\numberline {5.9}Git Commit}{9}{subsection.5.9}%
+\contentsline {subsection}{\numberline {5.10}Git Checkout}{10}{subsection.5.10}%
+\contentsline {subsection}{\numberline {5.11}Git Log}{10}{subsection.5.11}%
+\contentsline {subsection}{\numberline {5.12}Git head}{10}{subsection.5.12}%
+\contentsline {subsection}{\numberline {5.13}Graphs}{10}{subsection.5.13}%
+\contentsline {subsection}{\numberline {5.14}Stats}{12}{subsection.5.14}%
+\contentsline {subsection}{\numberline {5.15}Report Card}{12}{subsection.5.15}%
+\contentsline {section}{\numberline {6}References}{13}{section.6}%
