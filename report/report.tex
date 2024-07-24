@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[12pt]{article}
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
@@ -6,6 +6,13 @@
 \usepackage{fancyvrb}
 \usepackage{subcaption}
 \usepackage{amsmath}
+
+\newcommand{\innerproduct}[2]{\langle#1, #2 \rangle}
+% \DeclareMathOperator*{\argmax}{arg\,max}
+% \DeclareMathOperator*{\argmin}{arg\,min}
+\usepackage{enumerate}
+\usepackage{commath}
+\usepackage{amssymb}
 \usepackage[nottoc,numbib]{tocbibind}
 \captionsetup{compatibility=false}
 \graphicspath{ {./images/} }
@@ -25,8 +32,8 @@
 \patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
 \makeatother
 
-\title{\includegraphics[width=8cm]{bashlogo.png} \\[2cm] MIDTERM REPORT\\Machine Learning and Artificial Learning}
-\author{Siddhant Mulkikar\\Mentor: Sabyasachi Ray}
+\title{\includegraphics[width=8cm]{logo.png} \\[2cm] MIDTERM REPORT\\Machine Learning and Artificial Learning}
+\author{Siddhant Mulkikar (23B0956)\\Mentor: Sabyasachi Samantaray}
 \date{\today}
 
 \begin{document}
@@ -37,22 +44,37 @@
 \newpage
 
 \section{Objective}
-This midterm report goes through the basics of Machine Learning, followed a dive into the various popular ML algorithms.
+This midterm report goes through the basics of Machine Learning, followed a dive into some popular ML algorithms.
 
 \section{Introduction}
-Machine Learning is the study of building mathematical models and algorithms to help understand data. It is often seen as a subset of artificial intelligence. Machine learning algorithms build a mathematical model based on sample data, known as "training data", in order to make predictions or decisions. Machine learning algorithms are used in a wide variety of applications, such as email filtering and computer vision, where it is difficult or infeasible to develop conventional algorithms to perform the needed tasks.
-
+Machine Learning is the study of building mathematical models and algorithms to help understand data. It is often seen as a subset of artificial intelligence. Machine learning algorithms build a mathematical model based on sample data, known as "training data", in order to make predictions or decisions. 
 \section{Categories in Machine Learning}
-At the most fundamental level, machine learning can be categorized into two main types: supervised learning and unsupervised learning.
+Machine learning can be broadly categorized into two main types: supervised learning and unsupervised learning.
 
 \subsection{Supervised Learning}
-Supervised learning involves modelling the relationship between input features and the target variable. The model is trained on a labelled dataset, which means that each training example is paired with the correct target value.
+Supervised learning involves training the model on a labelled dataset, which means that each training example is paired with the correct target value. The model aims to find a relationship or map from the input features to the labelled value, such that it can get the closely accurate target value for any prediction we ask from it.
 It is further subdivided into two categories, regression and classification. Regression has continuous labels, like a real number in a range, while classification has discrete labels i.e. categories.
 \subsection{Unsupervised Learning}
 Unsupervised learning involves modelling the underlying structure or distribution in the data in order to learn more about the data. The model is trained on an unlabelled dataset, which means that the model is not provided with the correct target value.
-These models involve algorithms like clustering, anomaly detection and dimensionality reduction. Clustering involves grouping similar data points together, while dimensionality reduction involves reducing the number of input variables in the dataset, representating the data in a more clearly and anomaly reduction involves detecting outliers in the data.
+These models involve algorithms like clustering, anomaly detection and dimensionality reduction. Clustering involves grouping similar data points together, while dimensionality reduction involves reducing the number of input variables in the dataset, representating the data more clearly and anomaly reduction involves detecting outliers in the data.
 
-\newpage
+\section{Model Selection}
+\subsection{Hyperparameters}
+A hyperparameter is a parameter, such as the learning rate or batch size, which specifies details of the learning process. These are set before the learning process and are not interfered with while fitting the model to the training set. Hyperparamters usually tend to decide the efficiency of the model, and therefore, need to be tuned and optimized to get the most accurate predictions from the model.
+
+\subsection{Model validation}
+Model validation is important to check the effectiveness of our model, and this is done after choosing the model and the hyperparameters associated with it. However the limitaion we have is that our training set is limited, which forces us to develop ways to validate based on the limited data we have.
+\subsubsection*{Holdout sets}
+In this method, a subset of data is withheld from the training set, and then this data is used to check the model performance by predicted the target variables for this holdout set and comparing it with its labels. The problem with this is we are reducing the already limited size of training examples even more. This is where cross validation comes in.
+\subsubsection*{Cross Validation}
+In cross validation, the training set is divided into subsets of equal size, and the model is trained on all of them individually, while the remaining set is used to validate the model. This is repeated for all the subsets and the final validation score is gotten by combining all the validation scores from each subset, which can be done by taking the mean or some other way. This method is more effective than holdout sets, because none of the training examples are lost in the process.
+\begin{center}
+    \includegraphics*[width=15cm]{cv.png}\\
+    Five-fold cross validation
+\end{center}
+\newpage 
+
+
 \section{Supervised Learning Algorithms}
 \subsection{Linear Regression}
 Linear regression is a good starting point for regression models. The simplest linear regression model is fitting a straight line to a dataset, but it can be extended to model more complicated data behaviour.
@@ -60,21 +82,24 @@ Linear regression is a good starting point for regression models. The simplest l
 % A straight line fit is a model of the form : 
 The simplest linear regression model is a straight line fit, which is a model of the form :
 \begin{equation}
-    f_{w,b}(x) = wx + b
+    f_{w,b}(x) = \innerproduct{w}{x} + b
 \end{equation}
 The ultimate goal of the model is to find a weight vector $w$ and bias $b$, such that the predicted value of the target variable is as close as possible to the actual value over all training examples.
-\\Given a feature input vector of the $i^{th}$ training example, $x^{i} = <x_1,x_2,\dots,x_m>$, the model predicts the output $\hat{y}$, which is called the target variable, as :
+\\Given a input feature vector $x = <x_1,x_2,\dots,x_m>$, the model predicts the output $\hat{y}$, which is called the target variable, as:
 \begin{equation}
-    \hat{y^{(i)}} = f_{w,b}(x^{i}) = w \cdot x^{i} + b
+    \hat{y} = f_{w,b}(x) = \innerproduct{w}{x} + b
 \end{equation}
 where, $w = <w_1,w_2,\dots,w_m>$ is a vector of weights, $b$ is the bias term, both of which are learned by the model during the learning process.
-
+\begin{center}
+    \includegraphics*[width=10cm]{lin-reg.png}\\
+    Straight line fit after linear regression
+\end{center}
 In order to train the model, a cost function is defined, which measures the accuracy of the model's prediction. One of the most popular cost functions for linear regression is Mean sqaured error (MSE), which measures the average sqaure deviation between the actual and predicted target, values which is defined as:
 \begin{equation}
-    MSE = \frac{1}{m} \sum_{i=1}^{n} (y^i - \hat{y^i})^2 = L
+    MSE = \frac{1}{m} \sum_{i=1}^{n} (y^i - \hat{y^i})^2 = L(w,b)
 \end{equation}
 
-The model is trained by minimizing the cost function, which is done by using another algorithm like gradient descent. 
+The model is trained by updating the weight vector $w$ such that the cost function is minimized, which is done by using another algorithm like gradient descent. 
 
 \subsubsection*{Gradient Descent}
 Gradient descent is an optimization algorithm used to minimize some function by iteratively moving in the direction of steepest descent as defined by the negative of the gradient. The algorithm updates the weights vector and bias on each iteration, till it reaches a minima for the cost function.
@@ -92,27 +117,44 @@ If the number of training examples are $m$ and the number of features are $n$, t
 \begin{equation}
     \frac{\partial L(w_j,b)}{\partial w_j} = \frac{2}{m} \sum_{i=1}^{m} {x_j}^i(\hat{y^i}-y^i)
 \end{equation}
+\begin{center}
+    \includegraphics*[width=\textwidth]{grad-descent.png}
+\end{center}
 However, gradient descent can give inaccurate predictions if the algorithm doesn't reach the minima, i.e. it diverges from the minima. The convergence of gradient descent into a minima is determined by the learning rate $\alpha$.
 
 \subsubsection*{Learning rate $(\alpha)$}
-Learning rate is a parameter that determines the size of the step taken in each iteration of gradient descent. 
+Learning rate is a hyperparameter that determines the size of the step taken in each iteration of gradient descent. 
 % insert image of learning rate
+\begin{center}
+    \includegraphics*[width=\textwidth]{lr-types.png}
+    $L(w)$ vs $w$ for different learning rates $\alpha$
+\end{center}
+Lets go through all the cases to see how the learning rate affects the convergence of the gradient descent:
+\begin{itemize}
+    \item \textbf{Small learning rate:} If $\alpha$ is too low, the algorithm might take a lot of time to converge to the minimum, as the size of step is too small.
+    \item \textbf{Optimal learning rate:} If $\alpha$ is chosen properly, gradient descent converges to the minima in a decent number of epochs, which is desired.
+    \item \textbf{Large learning rate:} If $\alpha$ is high, it takes a big step during each iteration, such that it might overstep the minima and end up on the other side of the minima. This might result in a delayed convergence or no convergence at all.
+    \item \textbf{Too High learning rate:} If $\alpha$ is too high, the cost function would diverg, which might end up increasing the cost function, instead of minimizing it in each iteration.
+\end{itemize}
 
 \subsection{Polynomial Regression}
 Conceptually, polynomial regression is pretty similar to linear regression. The difference is instead of fitting a straight line, a polynomial curve is fitted to the data.\\
-Lets consider an univariate polynomial regression model ($n=1$), for simplicity, of degree $d$, with the weights being $w=<w_1,w_2,\dots,w_d>$:
+Lets consider an univariate polynomial regression model ($n=1$), for simplicity, of degree $d$, with the weights being $w=<w_1,w_2,\dots,w_d>$. The model is this case would be:
 \begin{equation}
     f_{w,b}(x) = w_1x + w_2x^2 + \dots + w_dx^d + b
 \end{equation}
-This can be thought of a multivariate linear regression model of $d$ features, where the features are not independent, but rather are powers of the one input feature $x$, i.e. $x_i=x^i$.\\
 
-
+This can be thought of a linear regression model of $d$ features, where the features are not independent. Thus, the input feature vector would be $\vec{x}=<x,x^2,\dots,x^d>$ and the model would be $f_{w,b}(x) = \innerproduct{w}{\vec{x}} + b$.\\
+\begin{center}
+    \includegraphics*[width=10cm]{poly-reg.png}\\
+    Polynomial curve fit after polynomial regression
+\end{center}
 
 \subsection{Logistic Regression}
 Despite the name suggesting regression, logistic regression is usually used as a binary classification model, i.e. it has two target variable values - 1 and 0, or True and False, also known as classes. 
 Given an input feature vector $x = <x_1,x_2,\dots,x_m>$, the model gives the probability of the target variable being 1, as:
 \begin{equation}
-    f_{w,b}(x) = \sigma(w \cdot x + b) = P(\hat{y}=1|x)
+    f_{w,b}(x) = \sigma(\innerproduct{w}{x} + b) = P(\hat{y}=1|x)
 \end{equation}
 where $\sigma$ is the sigmoid function, defined as:
 \begin{equation}
@@ -142,7 +184,7 @@ Naive Bayes models are a set of supervised learning algorithms based on the Baye
 \begin{equation}
     P(A|B) = \frac{P(B|A)P(A)}{P(B)}
 \end{equation}
-Lets consider a dataset with discrete features at first. The probability of the desired class $y$ for a single input feature $x_i$, is given by:
+Lets consider a dataset with $n$ discrete features at first. The probability of the desired class $y$ for a single input feature $x_i$, is given by:
 \begin{equation}
     P(y|x_i) = \frac{P(x_i|y)P(y)}{P(x_i)}
 \end{equation}
@@ -160,279 +202,224 @@ Considering the dataset has $n$ features, the model calculates the probability o
 If the problem is of binary classifcation, with the classes being $y_1$ and $y_2$, we can decide between the two classes by taking the ratio of both the probabilities i.e. $\frac{P(y_1|x_1,x_2,\dots,x_n)}{P(y_2|x_1,x_2,\dots,x_n)}$ and check if this ratio is greater or lesser than 1.\\
 More generally for multi-class classification, the class with the highest probability $\hat{y}$ is chosen as the predicted class by: 
 \begin{equation}
-    \hat{y} = argmax_y P(y) \prod_{i=1}^{n} P(x_i|y)
+    \hat{y} = \arg \max_{y} P(y) \prod_{i=1}^{n} P(x_i|y)
 \end{equation}
 \subsubsection*{Gaussian Naive Bayes}
 If instead of discrete features, our model has continuous features, the Gaussian Naive Bayes model can be used. The only difference is the way in which the probabilities are calculated. While it is quite self-evident in the case of discrete features, it is not that obvious in the case of continuous features.\\
-The model assumes that the dataset has a Gaussian distribution for each of the classes with no covariance between features (dimensions) i.e. every feature is independent from the other. The model then calculates the standard deviation $\sigma_y$ and $\mu_y$ for the desired class $y$, after which the probability for each feature is calculated as:
+The model assumes that the dataset has a Gaussian distribution for each of the classes with no covariance between features (dimensions) i.e. every feature is independent from the other and then calculates the standard deviation $\sigma_y$ and $\mu_y$ for the desired class $y$, after which the probability for each feature is calculated as:
 \begin{equation}
     P(x_i|y) = \frac{1}{\sqrt{2\pi\sigma_y^2}} exp \left (-\frac{(x_i-\mu_y)^2}{2\sigma_y^2}\right)
 \end{equation}
 % insert gaussian image
-The steps after this are the same as the discrete feature case.
- 
-
-\subsection{Git Init}
-Run the following command to initialize a remote git repository.
-\begin{verbatim}
-    bash submission.sh git_init <remote-repo-path>
-\end{verbatim}
-
-\subsection{Git Add}
-Run the following command to add files from the current directory to the staging area.
-\begin{verbatim}
-    bash submission.sh git_add
-\end{verbatim}
-
-\subsection{Git Remove}
-Run the following command to remove files from the staging area.
-\begin{verbatim}
-    bash submission.sh git_remove
-\end{verbatim}
-
-\subsection{Git Commit}
-Run the following command to commit the files in the staging area to the remote repository.
-\begin{verbatim}
-    bash submission.sh git_commit -m "commit message"
-\end{verbatim}
-
-\subsection{Git Checkout}
-Run the following command to checkout a particular commit from the remote repository.
-\begin{verbatim}
-    bash submission.sh git_checkout <commit-id> 
-    bash submission.sh git_checkout -m <commit-message>
-\end{verbatim}
-\newpage
-
-\subsection{Git Log}
-Run the following command to get the commit history log.
-\begin{verbatim}
-    bash submission.sh git_log
-\end{verbatim}
-
-\subsection{Git Head}
-Run the following command to get the head of the git repository, i.e. the current version of directory.
-\begin{verbatim}
-    bash submission.sh git_head
-\end{verbatim}
-
-\subsection{Graphs}
-Run the following command to get the graphs for a particular exam or all exams.
-\begin{verbatim}
-    bash submission.sh graphs
-\end{verbatim}
-
-\subsection{Stats}
-Run the following command to get the stats for a particular exam or \verb"main.csv".
-\begin{verbatim}
-    bash submission.sh stats
-\end{verbatim}
-
-\subsection{Report Card}
-Run the following command to get the report card/s for a particular student or all students.  
-\begin{verbatim}
-    bash submission.sh report_card
-\end{verbatim}
-
-\subsection{Help}
-Run the following command to get the help page.
-\begin{verbatim}
-    bash submission.sh help
-\end{verbatim}
-
-\section{Working}
-\subsection{Upload}
-\includegraphics[width=\textwidth]{upload.png}
-In the above example, the file \verb"quiz1.csv" is uploaded i.e. copied into the current directory from the filepath given as argument by the user.
-The script checks if the file exists and if it is a csv file. If it is, only then is the file copied into the current directory.\\
-\textbf{Script files : upload.sh }
-
-
-\subsection{Total}
-\begin{center}
-    \includegraphics[width=10cm]{total.png}
-\end{center}
-In the above example, the script totals the marks of each student over all exams and adds a new column \verb"Total" to the \verb"main.csv" file.
-If the marks column has \verb"a" as its entry, the script skips that row while totaling.\\
-\textbf{Script files : total.awk }
-
-\subsection{Combine}
-In the below example, the script combines all the csv files in the current directory into a single \verb"main.csv" file. The script checks if the file is a csv file and if it is not the \verb"main.csv" file.\\ \verb"main.csv" is constructed from scratch in the following steps:
-\begin{enumerate}
-    \item First, an array of all unique roll numbers and names is created.
-    \item Then, based on the exam files, a header is created with the roll numbers and names.
-    \item A mesh of \verb"a"'s is created with the dimensions of the header.
-    \item Then the script iterates over all exam files and fills in the marks of each student in the mesh, whenever they are found. This ensures that anyone who is not present in a particular exam file is marked as \verb"a"(absent) in \verb"main.csv" for that particular exam.
-\end{enumerate}
+The steps after this are the same as in the discrete features case.
 \begin{figure}[h]
     \begin{subfigure}{0.5\textwidth}
-    \includegraphics[width=\linewidth, height=3cm]{before_combine.png} 
-    \caption{Before combine}
+    \includegraphics[width=\linewidth]{gaus-nb-before.png} 
+    \caption{Representation of data points}
     \label{fig:subim1}
     \end{subfigure}
     \begin{subfigure}{0.5\textwidth}
-    \includegraphics[width=\linewidth, height=3cm]{after_combine.png}
-    \caption{After combine}
+    \includegraphics[width=\linewidth]{gaus-nb-after-2.png}
+    \caption{After Gaussian Naive Bayes}
     \label{fig:subim2}
     \end{subfigure}
 \end{figure}
-
-\textbf{Script files : combine.sh, combine.awk}
-
-
-\subsection{Update}
-\begin{figure}[h]
-    \begin{subfigure}{0.5\textwidth}
-    \includegraphics[width=\linewidth, height=3cm]{quiz-before.png} 
-    \caption{quiz1.csv before update}
-    \end{subfigure}
-    \begin{subfigure}{0.5\textwidth}
-    \includegraphics[width=\linewidth, height=3cm]{quiz-after.png}
-    \caption{quiz2.csv after update}
-    \end{subfigure}
-\end{figure}
-\begin{figure}[h]
-    \begin{subfigure}{0.5\textwidth}
-    \includegraphics[width=\linewidth, height=3cm]{main-before.png} 
-    \caption{main.csv before update}
-    \end{subfigure}
-    \begin{subfigure}{0.5\textwidth}
-    \includegraphics[width=\linewidth, height=3cm]{main-after.png}
-    \caption{main.csv after update}
-    \end{subfigure}
-\end{figure}
-In the above example, the script updates the marks of \textbf{23B0956} in \verb"quiz1.csv" and \verb"main.csv".\\
-The script first asks the user for the roll number and name of the student whose marks are to be updated. It then checks if the student's name matches with the name paired up with the roll number given by the user. If the names do not match, the script confirms with the user with a prompt for the correct name.\\
-It then checks if the student is present in the \verb"main.csv" file and if the exam file exists. If the student is present in the \verb"main.csv" file, the script updates the marks of the student in \verb"main.csv" by calling \verb"update_main.awk" and the exam file by calling \verb"update_exam.awk".\\
-If the student's record does not exist in the \verb"main.csv" file, the script prompts the user to confirm if they want to add the student's record to an exam file and \verb"main.csv". If the user confirms, the script adds the student's record to the exam file and \verb"main.csv".\\
-It also asks the user if they want to update the marks of the student in some other exam and repeats the same process. If the user does not want to update the marks of the student in any other exam, the script checks if \verb"main.csv" had been totaled before. If it was, then the script calls \verb"total.awk" to correct the total, as the marks in \verb"main.csv" have been updated.\\
-
-\textbf{Script files : update.sh, update\_exam.awk, update\_main.awk, total.awk} 
-
-\subsection{Rank}
-This commands takes the examname as a command line argument and ranks the students based on the marks in that exam.
-If the user enters \verb"main" as the examname, the script ranks the students based on the total marks in \verb"main.csv". The ranked marklists are sorted according to rank and are stored in the folder \verb"ranked_marklists" in the current directory.\\
-
-\textbf{Script files : rank.sh }
-
-\subsection{Git Init}
-This command initializes a remote git repository at the path given by the user as a command line argument.\\
-It also checks if the path given is a valid path. If a remote repository is already initialized for the current directory, the script prompts the user to confirm if they want to reinitialize the repository.
-If the user confirms, the script reinitializes a fresh remote repository at the path provided by the user.\\ 
-
-It also creates a hidden folder \verb".gitrepo" in the current directory. This folder contains a hidden file \verb".gitreponame" which stores the name of the remote repository and \verb".git_log" which records the commit history.\\
-
-Apart from initialization, the script also copies all the csv files in the current directory at the time of initialization to a hidden folder \verb".ogfiles" in the remote repository. The \verb".ogfiles" folder contains the first version of every file which was ever committed. This serves as a refernce point for all files, for my \textbf{diff patch} system for \verb"git\_checkout" to work.\\
-
-\textbf{Script files : git\_init.sh}
-\subsection{Git Add}
-This command first checks if a remote repository has been initialized for the current directory. If it has not, the script prompts the user to initialize a remote repository first.\\
-This command then prompts the user to enter all the files, which they want to add to the staging area, separated by spaces. It then copies all the files to the staging area in the remote repository. If any particular file doesnt exist in the current directory, it gives an error message.\\
-\textbf{Script files : git\_add.sh}
-
-\subsection{Git Remove}
-This command first checks if a remote repository has been initialized for the current directory. If it has not, the script prompts the user to initialize a remote repository first.\\
-It then prompts the user to enter all the files, which they want to remove from the staging area, separated by spaces. It then deletes all the files from the staging area in the remote repository. If any particular file doesnt exist in the staging area, it gives an error message.\\
-
-\textbf{Script files : git\_remove.sh}
-
-\subsection{Git Commit}
-The command first checks if a remote repository has been initialized for the current directory. If it has not, the script prompts the user to initialize a remote repository first.\\
-It then checks what all files in the staging area are modified with respect to the \textbf{first version of the file} in the \verb".ogfiles" folder. It also checks for any new files which were created and committed for the first time. It then updates the \verb".git_log" file with these modified and added files, along with the commit message and the files which were modified or added in this commit, which is uniqely identified by the commit message, given by the user and the 16 character hash commit id, generated randomly using the \verb"uuidgen" command. A folder with the commit-id as its name is created in the commits folder of the remote repository.\\
-
-If any file in the staging area is not present in the \verb".ogfiles" folder, it adds it to the \verb".ogfiles" folder.\\ It then copies the diff of the file from the \verb".ogfiles" folder and the file in the staging area into the commit-id folder.\\
-
-It also gets the list of all csv files in the current repository at the time of the commit and stores their name in a hidden \verb".files" file in the commit-id folder. This provides a snapshot of all the files in the current repository at the time of the commit, which is useful at the time of \verb"git\_checkout".The stage is deleted after the commit is made.\\
-
-\textbf{Script files : git\_commit.sh}
-
-\subsection{Git Checkout}
-The command first checks if a remote repository has been initialized for the current directory. If it has not, the script prompts the user to initialize a remote repository first.\\
-The user can checkout a particular commit by entering the commit-id (even entering the first few characters of the commit-id works too, if they are unique and not shared with any other commit-id) or the commit message. The script then parses and checks for matches to the commit-id or the commit message in the \verb".git_log" file. If it finds a match, it goes to the commit-id folder.//
-There, it gets the snapshot of the current repository at the time of the commit from the \verb".files" file. It also gets the list of patch files in the commit-id folder.\\
-
-It deletes all the .csv files from the current directory and then iterates over all files in the snapshot. If the patch file exists for a particular file, it applies \verb"patch -b" command to this patch file and the corresponding file in the \verb".ogfiles" folder, which gives back the version of the file at that commit as \verb"<filename>.csv" and also the original file in the \verb".ogfiles" as \verb"<filename>.csv.orig".
-The .csv file is then copied from the \verb".ogfiles" folder to the current directory and the .csv.orig file is renamed to .csv file, hence restoring the original file in the \verb".ogfiles" folder.\\
-
-\textbf{Script files : git\_checkout.sh}
-
-\subsection{Git Log}
-The command first checks if the remote repository has been initialized for the current directory. If it has not, the script prompts the user to initialize a remote repository first.
-The script then reads the \verb".git_log" file and prints the commit history log in a readable format, with the commit-id, commit-message and time of commit. It also displays any new files created in the current directory, when they are committed for the first time, by the name \textbf{New files added:}, and if any files were modified from the time when the time the remote repository was initialized, it also shows them under the name \textbf{Files modified:} \\
-
-While this command only displays the commit history log, it is actually the \verb"git_commit" command which actually updates the \verb".git_log" file, at every commit.\\
-
-\textbf{Script files : git\_log.sh}
-\subsection{Git head}
-This command shows the present head of the current directory.\\
-
-\textbf{Script files : git\_head.sh}
-
-
-\subsection{Graphs}
-This command calls the \verb"graphs.py" python script, which has a interface where users can choose between a histogram and a scatter plot. Then, the user can choose between a particular exam or \verb"main" (for \verb"main", it considers the total marks for mark generation). It then calls the corresponding function from \verb"graph_functions.py" to plot the graph, if the csv file of the exam exists.\\
-The graphs also show the demarcation for 90th percentile, 75th percentile and mean marks.\\
-
-\textbf{Modules used for graph generation: os, csv, matplotlib}\\
-
-\textbf{Script files: graphs.py, graph\_functions.py}
-
-\begin{figure}[h]
-    \begin{subfigure}{0.5\textwidth}
-    \includegraphics[width=\linewidth, height=5cm]{histogram.png} 
-    \caption{Histogram for midsem marks}
-    \end{subfigure}
-    \begin{subfigure}{0.5\textwidth}
-    \includegraphics[width=\linewidth, height=5cm]{scatter-plot.png}
-    \caption{Scatter plot for main.csv}
-    \end{subfigure}
-\end{figure}
 \newpage
-
-\subsection{Stats}
-This command calls the \verb"stats.py" python script, which has a interface where users can choose between a particular exam or \verb"main" (for \verb"main", it considers the total marks for mark generation). It then displays the stats for that particular exam or \verb"main", if the csv file for the exam exists.\\
-The stats include the mean, median, mode, standard deviation, $25^{th}$ percentile, $75^{th}$ percentile, $90^{th}$ percentile and maximum marks.\\
-All these stats are calculated by calling their respective functions from \verb"stats_functions.py".\\
-
-\textbf{Modules used for stats generation: os, csv, statistics}\\
-
-\textbf{Script files: stats.py, stats\_functions.py}\\
+\subsection{Support Vector Machines}
+A support vector machine is an supervised learning algorithm usually used for classfication problems. The model is similar to logistic regression, in the sense, that it fits a hyperplane, also known as decision boundary, separating the classes in two or higher dimensions. However, the difference lies in choosing the hyperplane.\\
+Lets consider a binary classification problem, with two classes $y_1$ and $y_2$. As we can see in the figure below, there are multiple hyperplanes which can be separators, and the choice of a hyperplane would affect the class which would be assigned to a new input data point, i.e. the red cross in the plot.\\
 \begin{center}
-    \includegraphics[height=5cm,width=10cm]{stats.png}
+    \includegraphics[width=10cm]{svm-possible-hp.png}
 \end{center}
-
-\subsection{Report Card}
-This command calls the \verb"report_card.py" python script, which has a interface where users can choose between a particular student or all students. It then displays the report card for that particular student or saves the pdf of all student report cards in the \verb"report_cards" folder in the current directory.\\
-
-It gets the grades and percentile rubrics for the grades from the instructor by calling functions from the \verb"grade.py" script. It then gets all the exams conducted and the maximum marks scored in each of these exams. Student marks for all students are also fetched by using the module \verb"csv".\\ It then calculates the weighted percentage of each student by using the formula:
+SVMs solve this problem by fixing the choice of the hyperplanes. This is done by using a line of non-zero width as the hyperplane, instead of a zero-width line.\\
+The original hyperplane is called the \textbf{maximum margin hyperplane}, which we will refer to as MMH hereafter for convenience.
+The data points which are the closest to the MMH are called the \textbf{support vectors}. Two parallel hyperplanes to the MMH which pass through these support vectors are called \textbf{marginal planes}. The width between the marginal planes is called the \textbf{margin}.\\
+SVMs aim to maximise this margin to get the optimal hyperplane for separation.
+\begin{center}
+    \includegraphics[width=10cm]{svm-margin.png}
+\end{center}
+Let a hyperplane be defined as:
+\begin{equation*}
+    \innerproduct{w}{x} + b = 0
+\end{equation*}
+Let the classes be linearly seperable, i.e. they can be separated by a single line between them. If $y_i = 1$, let the point belong to $y_1$, and if $y_i = -1$, let the point belong to $y_2$. Taking  the margin $2M$, we get 
+For the hyperplane to be the MMH, the following conditions must be satisfied for all $i=1,2 \dots n$, where $n$ is the number of training examples, i.e. the number of data points:
+\begin{enumerate}[(I)]
+    \item $y_i(\innerproduct{w}{x_i} + b) \geq 1$ 
+    \item $\max_{w,b} M$
+\end{enumerate}
+Let's choose a scale for the axes of the data such that $\innerproduct{w}{x} +b = 1$ at the closest data point $x_a$ to the hyperplane. Let the orthogonal projection of $x_a$ on the hyperplane be $x_a$'. By definition, it should satisfy the eqaution of the hyperplane.
 \begin{equation}
-    W.P. = \frac{\sum_{i=1}^{n} {M_i} \times {M_{max_i}}}{\sum_{i=1}^{n} {M_{max_i}}^2} \times 100\\
+    \innerproduct{w}{x_a'} + b = 0
 \end{equation}
-where $M_i$ is the marks scored by the student in exam i, $M_{max_i}$ is the maximum marks scored in exam i and $n$ is the number of exams.\\
+$\because$ $x_a = x_a' + M\frac{w}{\norm{w}}$, as $\frac{w}{\norm{w}}$ is the unit vector in the direction of $w$. Substituting this in (19), we get:
+\begin{equation*}
+    w \cdot (x_a - M\frac{w}{\norm{w}}) + b = 0
+\end{equation*}
+\begin{equation*}
+    (w \cdot x_a + b) - M\norm{w} = 0
+\end{equation*}
+Since, $w \cdot x_a + b = 1$, we get:
+\begin{equation}
+    M = \frac{1}{\norm{w}}
+\end{equation}
 
-This is considering the maximum marks scored in each exam as the total marks for that exam. This ensures that a person with more marks in an exam with a greater weightage gets a higher weighted percentage.\\
+Hence, the second condition can be written as:
+\begin{equation}
+    \min_{w,b} \norm{w}
+\end{equation}
+In case of hard margin SVM classifiers, no misclassifcations can be allowed, i.e. the first condition must be satisfied for all $i=1,2 \dots n$. For this classifer, the cost function can be defined as:
+\begin{equation}
+    L(w,b) = \frac{1}{2} \min_{w,b} \norm{w}^2
+\end{equation}
 
-The script then calculates the grade of each student by using the weighted percentage and the rubrics provided by the instructor. Then the percentiles of each student are calcualted with this weighted percentage using the \verb"scipy" module.
-Then, the report card is generated from a template report card and text is put on the template using the \verb"PIL" module and then converted to pdf form for all students, while it's only displayed for one person.
+However, there can be overlaps between classes, for which soft margin SVM classifiers are used, which also allowed for misclassifcations and integrates this into the cost function.
+The model defines a slack variable $\zeta_i$ for $i_{th}$ point, where $\zeta_i = \max(0,1-y_i(w \cdot x_i + b))$. 
+The cost function therefore can be defined as:
+\begin{equation}
+    L(w,b) = \frac{1}{2} \min_{w,b} \norm{w}^2 + C \sum_{i=1}^{n} \zeta_i
+\end{equation}
+The value of $C$ is a hyperparameter, which decides the hardness of the margin. A large $C$ means a hard margin, i.e. it does not allow for points to lie in the margin, while a model with a small $C$ does allow for encompassing points.\\
+In the case of non-linearly seperable data, kernels are used which project the data to a higher-dimensional space defined by the kernel function.
+\begin{center}
+    \includegraphics[width=\textwidth]{kernel.png}
+\end{center}
+Taking an example of a non-linearly separable dataset in $R^2$  in the above figure, the data can be projected to $R^3$ by using the radial basis function (RBF) kernel, which is defined as:
+\begin{equation}
+    K(x,x') = exp(-\gamma \norm{x-x'}^2)
+\end{equation}
+Now, a hyperplane can be easily constructed in $R^3$, separating the datasets in two classes. This results in an almost circular (non-linear) decision boundary in $R^2$.
+\subsection{Decision Trees}
+Decision trees is a non-parametric supervised learning algorithm used for classifcation and regression tasks. The model is structured as a rooted tree, consisting of nodes, which are essentially conditions. Each parent node splits into child nodes based on the condition in the node. The tree ends with the leaf nodes, i.e. the stage where the classification or regression is deemed to be completed.\\
 
 \begin{center}
-    \includegraphics[height=10cm,width=8cm]{report-card.png}
+    \includegraphics[width=10cm]{decision-tree-eg.png}
 \end{center}
+Lets consider we have some points in n-dimensions, marked red and blue. Taking a binary decision tree for this classification task, we start with the root node and compare the value of $x_2$ with the threshold value $tl_1$. Based on this condition, the whole n-dimensional space, splits into two regions, and with it the points are also seperated. This process is repeated for each node, where the region passed down from its parent node is splitted further based on the condition of the current node, till the leaf nodes are reached. \\
+Considering the above example, there are 7 leaf nodes, each indicates a non-overlapping region in the n-dimensional space. Splitting at each node can be thought of putting a hyperplane in the n-dimensional space, basically a mini-decision boundary.\\
+The optimal decision tree divides the n-dimensional space into regions, such that each region has only one class of points, which depends on the condition on the nodes. While, the model is said to be non-parametric, the conditions can be thought of parameters, which the model has to learn. This is done by maximising the \textbf{information gain} at each split, which is defined as:\\
+\begin{equation}
+    IG = E(parent) - \sum{E(child_i)}
+\end{equation}
+where $IG$ is the information gain, $E(Data)$ is the entropy of the data before the split and $E(Data|Split)$ is the entropy of the data after the split. The entropy of the data is defined as:
+\begin{equation*}
+    E(Data) = -\sum_{i=1}^{n} p_i \log_2(p_i)
+\end{equation*}
+where $p_i = n_i/n$ such that $n_i$ is the number of points of the $i_{th}$ class in the region of the node.\\
+From this we can see that decision trees are greedy algorithms as the prioritise the decision which gives the most reward at the current node, without considering any future nodes.\\
+\newline
+Decision trees can be prone to overfitting and can take a lot of time to train, if not stopped from growning. This can be controlled by setting a maximum depth for the tree, or a minimum number of samples required to split a node, which are essentially hyperparameters set by the user.\\
+\subsection{Random Forests}
+Random forests, simply put, can be thought of as a collection of decision trees, which are trained parallely and then the final prediction is made by merging the outputs of all the individual trees. Hence, it is an ensemble learning method, which means utilising multiple learning algorithms to obtain the prediction.\\
+Ensemble primarily can be of two types, Bagging and Boosting. Bagging is when the models are trained parallely, while Boosting is when the models are trained sequentially, with the output of one model being the input of the next model. \\
+Random forests work on the principle of Bagging.
+\subsubsection*{Bagging}
+Bagging stands for Bootstrap Aggregation. The steps involved in bagging are:
+\begin{enumerate}
+    \item \textbf{Bootstrap: }Random subsets of training data is selected with replacement, allowing for multiple instances of the same data point. Each of these subsets is to be trained on a differene decision tree. 
+    \item \textbf{Feature selection: }For each sample, a random subset of features is selected, such that the decision tree can split based on only these selected features. The size of this random subset is a hyperparameter, which can be tuned. However, the general consensus by researchers is that the log or square root of the total number of features works best.
+    \item \textbf{Training: }A decision tree is trained on each of the bootstrap samples, with the selected features. 
+    \item \textbf{Aggregation: }To get the final prediction, the input data point is passed through all decision trees, and the majority output is assigned as the class of the input data point, in the case of a classification problem. For regression, usually, the average of all the outputs is taken.
+\end{enumerate}
+Random forests, while slower, usually perform better than singular decision trees, as they are more robust and thus less prone to overfitting. Decision trees have a high variance and can change a lot with minor changes to the training data, whereas random forests are more resistant to such changes. They also help in feature selection by highlighting important features. 
 
-\textbf{Modules used for report card generation: os, csv, statistics, scipy, PIL}\\
+\section{Deep Learning}
+Deep learning is a subset of machine learning, which is based on neural networks. But before we get into deep learning, lets understand what a neural network is and how it works.
+\subsection{Neural Networks}
+Neural networks is a machine learning model, closelt inspired by the actual human brain and nervous system. It consists of many nodes, called neurons, arranged sequentially. Each layer is connected to the next layer. The first layer is called the input layer and the last layer is called the output layer. The layers in between are called hidden layers.\\
+\begin{center}
+    \includegraphics[width=10cm]{nn-first.png}
+\end{center}
+As evident from the name, the input layer takes the input data, which is then passed through all the hidden layers, finally ending at the output layer, which gives the prediction. Each neuron takes an input and applies a function or mutltiple functions before passing the transformed input to the next layer.\\
+\subsubsection*{Neuron}
+A neuron is the basic unit of a neuron network. It takes a input vector $x = <x_1,x_2,\dots,x_n>$ from the previous layer. Each neuron has a weight vector $w = <w_1,w_2,\dots,w_n>$ and bias $b$ associated with it. The neuron first applies a linear function on the input:
+\begin{equation*}
+    z = \innerproduct{w^T}{x} + b
+\end{equation*}
+Then, an activation function $a$ is applied on z:
+\begin{equation}
+    a(z) = g(z)
+\end{equation}
+\newpage
+Now lets consider the $L^{th}$ layer. For any term Q, let $Q^{[L]}$ denote the term in the $L^{th}$ layer. Hence, the number of neurons in this layer be $n^{[L]}$. The weight vector for the $j^{th}$ neuron would be $w^{[L]}_j$ and the weight matrix for the entire layer would be $w^{[L]}$ and the bias matrix to be $b^{[L]}$. Let the input to this layer be $X^{[L]}$.
+\begin{equation}
+    z^{[L]} = w^{[L]}X^{[L]} + b^{[L]}
+\end{equation}
+\begin{equation}
+    z^{[L]} = \begin{bmatrix} w^{[L]}_1 \\ w^{[L]}_2 \\ \vdots \\ w^{[L]}_{n^{[L]}} \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix} + \begin{bmatrix} b^{[L]}_1 \\ b^{[L]}_2 \\ \vdots \\ b^{[L]}_{n^{[L]}} \end{bmatrix} = \begin{bmatrix} \innerproduct{w^{[L]}_1}{x} + b^{[L]}_1 \\ \innerproduct{w^{[L]}_2}{x} + b^{[L]}_2 \\ \vdots \\ \innerproduct{w^{[L]}_{n^{[L]}}}{x} + b^{[L]}_{n^{[L]}} \end{bmatrix}
+\end{equation}
+\begin{equation}
+    a^{[L]} = g(z^{[L]})
+\end{equation}
+Since, for a hidden layer, the input is the output of the previous layer, i.e. $a^{[L-1]}=X^{[L]}$, and the input layer can be written as $a^{[0]}$. The equation can hence be written as:
+\begin{equation}
+    a^{[L]} = g(w^{[L]}a^{[L-1]} + b^{[L]})
+\end{equation}
 
-\textbf{Script files: report\_card.py, grade.py}
+\subsubsection*{Activation function}
+An activation function plays an important role in a neural network by introducing non-linearity in it. Without it, the entire network would be linear and can be representated by a single layer, simplifying the NN to a linear regression model, which we don't want as complexity is desired for better predictions.\\
+There are many choices of activation functions available. Some of the popular ones are:
+\begin{itemize}
+    \item \textbf{Sigmoid: }$g(z) = \frac{1}{1+e^{-z}}=a$ and $a' = a(1-a)$\\
+        \begin{center}
+            \includegraphics[width=6cm]{sigmoid.png}
+        \end{center}
+    \item \textbf{Tanh: }$g(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}=a$ and $a' = 1-a^2$\\It is a shifted sigmoid function, used to mean the data to 0. Usually it is prefered to sigmoid, except the last layer, where sigmoid is used.
+        \begin{center}
+            \includegraphics[width=8cm]{tanh.png}
+        \end{center}
+        
+    \item \textbf{ReLU: }$g(z) = \max(0,z)=a$\\
+    \begin{equation*}
+        a' =
+          \begin{cases}
+            1 & \text{for x $>$ 0}\\
+            0 & \text{for x $<$ 0}
+          \end{cases}       
+      \end{equation*}
+    \\ReLU stands for Rectified Linear Unit. It is used universally, as it is considered to be better than tanh and sigmoid. This because as large $z$ values, the gradient of sigmoid and tan h functions become almost zero. Hence, gradient descent takes a lot of time to converge. ReLU does not have this problem, as the gradient is 1 for $z>0$.
+        \begin{center}
+            \includegraphics[width=8cm]{relu2.png}
+        \end{center} 
+    \item \textbf{Leaky ReLU: }$g(z) = \max(\alpha z,z)$\\
+    \begin{equation*}
+    a' =
+      \begin{cases}
+        1 & \text{for x $>$ 0}\\
+        \alpha & \text{for x $<$ 0}
+      \end{cases}       
+  \end{equation*}   
+    \\Leaky ReLU is a slight variation of the ReLU function, where the function is not zero for $z<0$, but a value $\alpha z$, where $\alpha$ is a small positive number. This helps solve the Dying ReLU problem, where a neuron with a negative bias would never activate, as the gradient would be zero.
+        \begin{center}
+            \includegraphics[width=8cm]{leaky-relu.png}
+        \end{center}
+\end{itemize}
 
+
+
+
+
+\newpage
+\section{Updated POA}
+\begin{itemize}
+    \item \textbf{Week 1: }Got familiar with various python libraries like numpy, matplotlib and pandas
+    \item \textbf{Week 2: }Got started with Andrew Ng's course on Supervised Machine Learning: Regression and Classification
+    \item \textbf{Week 3: }Completed the course and got an overview of the mathematics behind linear, polynomial and logistic regression from Trevor Hastie
+    \item \textbf{Week 4: }Read about classification algorithms like Naive Bayes and SVMs from JakeVandeplas, Trevor Hastie and Deisenroth, and completed the midterm report submission
+    \item \textbf{Week 5: }Get started with the Advanced Learning Algorithms course by Andrew Ng and read about the remaining learning algorithms like Random Forests, K-Means, from JakeVandeplas.
+    \item \textbf{Week 6: }Delve into deep learning and Read about RNN’s and CNN’s from Eli Stevens and Andrew Ng’s course on Deep Learning
+    \item \textbf{Week 7: }Check/Try out implementations of these deep learning models
+    \item \textbf{Week 8: }Go over some of the mathematics behind these ML algorithms from Deisenroth and complete the final report submission. Also read about special concepts like Recommender Systems, Anomaly detection and bias-variance tradeoff.
+\end{itemize}
+\newpage
 \begin{thebibliography}{9}
 
-\bibitem{bash}Bash manual: \url{https://www.gnu.org/software/bash/manual/bash.html}
-\bibitem{awk} Awk manual: \url{https://www.gnu.org/software/gawk/manual/gawk.html}
-\bibitem{python} Python manual: \url{https://docs.python.org/3/}
-\bibitem{matplotlib}Matplotlib manual:  \url{https://matplotlib.org/}
-\bibitem{scipy}Scipy module: \url{https://www.scipy.org/}
-\bibitem{PIL}PIL module:  \url{https://pillow.readthedocs.io/en/stable/}
-\bibitem{csv}csv module: \url{https://docs.python.org/3/library/csv.html}
-\bibitem{os}os module:  \url{https://docs.python.org/3/library/os.html}
+\bibitem{book1}An introduction to Statistical Learning, Hastie et al.
+\bibitem{book2}Mathematics for Machine Learning, Deinsenroth et al.
+\bibitem{nb1}Python Data Science Handbook, Jake VanderPlas \url{https://jakevdp.github.io/PythonDataScienceHandbook/}
+\bibitem{course1} Supervised Machine Learning: Regression and Classification, Andrew Ng \url{https://www.coursera.org/specializations/machine-learning-introduction}
+\bibitem{yt1}Statquest with Josh Starmer: \url{https://www.youtube.com/@statquest}
+\bibitem{book3}Understanding Machine Learning: From Theory to Algorithms, Shai Shalev-Shwartz and Shai Ben-David
 
 \end{thebibliography}
 
