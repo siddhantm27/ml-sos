@@ -6,6 +6,35 @@
 \usepackage{fancyvrb}
 \usepackage{subcaption}
 \usepackage{amsmath}
+\usepackage{blindtext}
+\usepackage[most]{tcolorbox}
+
+\makeatletter
+\NewDocumentCommand{\mynote}{+O{}+m}{%
+  \begingroup
+  \tcbset{%
+    noteshift/.store in=\mynote@shift,
+    noteshift=1.5cm
+  }
+  \begin{tcolorbox}[nobeforeafter,
+    enhanced,
+    sharp corners,
+    toprule=1pt,
+    bottomrule=1pt,
+    leftrule=0pt,
+    rightrule=0pt,
+    colback=yellow!20,
+    #1,
+    left skip=\mynote@shift,
+    right skip=\mynote@shift,
+    overlay={\node[right] (mynotenode) at ([xshift=-\mynote@shift]frame.west) {\textbf{Note:}} ;},
+    ]
+    #2
+  \end{tcolorbox}
+  \endgroup
+  }
+\makeatother
+
 
 \newcommand{\innerproduct}[2]{\langle#1, #2 \rangle}
 % \DeclareMathOperator*{\argmax}{arg\,max}
@@ -32,7 +61,7 @@
 \patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
 \makeatother
 
-\title{\includegraphics[width=8cm]{logo.png} \\[2cm] MIDTERM REPORT\\Machine Learning and Artificial Learning}
+\title{\includegraphics[width=8cm]{logo.png} \\[2cm] ENDTERM REPORT\\Machine Learning and Artificial Learning}
 \author{Siddhant Mulkikar (23B0956)\\Mentor: Sabyasachi Samantaray}
 \date{\today}
 
@@ -58,7 +87,7 @@ It is further subdivided into two categories, regression and classification. Reg
 Unsupervised learning involves modelling the underlying structure or distribution in the data in order to learn more about the data. The model is trained on an unlabelled dataset, which means that the model is not provided with the correct target value.
 These models involve algorithms like clustering, anomaly detection and dimensionality reduction. Clustering involves grouping similar data points together, while dimensionality reduction involves reducing the number of input variables in the dataset, representating the data more clearly and anomaly reduction involves detecting outliers in the data.
 
-\section{Model Selection}
+\section{Model Selection} \label{model-selection}
 \subsection{Hyperparameters}
 A hyperparameter is a parameter, such as the learning rate or batch size, which specifies details of the learning process. These are set before the learning process and are not interfered with while fitting the model to the training set. Hyperparamters usually tend to decide the efficiency of the model, and therefore, need to be tuned and optimized to get the most accurate predictions from the model.
 
@@ -72,9 +101,43 @@ In cross validation, the training set is divided into subsets of equal size, and
     \includegraphics*[width=15cm]{cv.png}\\
     Five-fold cross validation
 \end{center}
-\newpage 
+\newpage
+\subsubsection*{Bias-Variance Tradeoff} \label{bias-variance}
+Bias is defined as the error between the predicted value and the actual value, which we are trying to predict. Variance is defined as the variability of the model prediction for a given data point. Simply put, bias is how much does the model simplify the relation between the input and output labels of the training set, which variance is how much the model takes into account the complexity or noise in the training set.\\
+Models with high bias, makes the model more flexible, however it might increase the error in the model prediction. Such a model is said to be underfitting the data. Whereas, models with high variance, take into account even minute changes in the training data, capturing a lot of noise in the process. While they decrease the error in the training set drastically, they might not perform well on sets other than the training set, as they are trained too specific to the training data and are said to overfit the data.\\
+\begin{center}
+    \includegraphics*[width=15cm]{underfit-overfit.png}\\
+\end{center}
+The age-old problem in machine learning is to create the best model is to find the sweet spot between bias and variance, such that the model performs well on all datasets, as models with high bias often have low variance and vice versa. This is known as the \textbf{bias-variance tradeoff}.\\
+To solve this problem, we need to first quantify what the "best model" should be like, and we can use the $R^2$ score for this. \\
+\newline
+$R^2$ score or coefficient of determination is a statistical measure of how well a model performs relative to a simple mean of the target values. $R^2=1$ is a perfect score, whereas $R^2=0$ means the model is as good as the mean of the target values. A negative $R^2$ score means the model is worse than that. It is calculated as:
+\begin{equation}
+    R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y_i})^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2}
+\end{equation}
+Here, $y_i$ is the actual target value, $\hat{y_i}$ is the predicted target value and $\bar{y}$ is the mean of the target values.\\
+\newpage
+The model is run on the training set and the validation set, and the $R^2$ score is calculated for both. 
+\begin{center}
+    \includegraphics*[width=17cm]{r2.png}\\
+\end{center}
+As you can see the above figure, for the high-bias model, the performances of the model on the validation set and training set are similar. Whereas for the high-variance model, the performance on the training set is much better than the validation set. \\
+\newline
+\textbf{Validation Curve} \\
+Validation curve is the plot of the model score vs the model complexity. Lets understand it through an illustration.
+\begin{center}
+    \includegraphics*[width=8cm]{validation-curve.png}\\
+\end{center}
+From the above diagram, we can observe that:
+\begin{itemize}
+    \item The training score is always higher than the validation score, as the model will give better predictions on the data it was trained on, than the data which it encounters for the first time.
+    \item While the training score increases with model complexity, validation score increases and then decreases, like a bell curve. This is because, as the model complexity increases, the model starts to overfit the data, and hence the validation score decreases and at low model complexity, the model is too simple to give accurate predictions, hence both training and validation scores are low.
+    \item At an intermidiate model complexity, the validation score is the greatest, which indicates the suitable level of model complexity for the bias-variance tradeoff, to get the best predictions.
+\end{itemize}
 
 
+
+\newpage
 \section{Supervised Learning Algorithms}
 \subsection{Linear Regression}
 Linear regression is a good starting point for regression models. The simplest linear regression model is fitting a straight line to a dataset, but it can be extended to model more complicated data behaviour.
@@ -331,7 +394,7 @@ Neural networks is a machine learning model, closelt inspired by the actual huma
     \includegraphics[width=10cm]{nn-first.png}
 \end{center}
 As evident from the name, the input layer takes the input data, which is then passed through all the hidden layers, finally ending at the output layer, which gives the prediction. Each neuron takes an input and applies a function or mutltiple functions before passing the transformed input to the next layer.\\
-\subsubsection*{Neuron}
+\subsection*{Neuron}
 A neuron is the basic unit of a neuron network. It takes a input vector $x = <x_1,x_2,\dots,x_n>$ from the previous layer. Each neuron has a weight vector $w = <w_1,w_2,\dots,w_n>$ and bias $b$ associated with it. The neuron first applies a linear function on the input:
 \begin{equation*}
     z = \innerproduct{w^T}{x} + b
@@ -356,7 +419,7 @@ Since, for a hidden layer, the input is the output of the previous layer, i.e. $
     a^{[L]} = g(w^{[L]}a^{[L-1]} + b^{[L]})
 \end{equation}
 
-\subsubsection*{Activation function}
+\subsection*{Activation function}
 An activation function plays an important role in a neural network by introducing non-linearity in it. Without it, the entire network would be linear and can be representated by a single layer, simplifying the NN to a linear regression model, which we don't want as complexity is desired for better predictions.\\
 There are many choices of activation functions available. Some of the popular ones are:
 \begin{itemize}
@@ -394,8 +457,222 @@ There are many choices of activation functions available. Some of the popular on
             \includegraphics[width=8cm]{leaky-relu.png}
         \end{center}
 \end{itemize}
+\newpage
+\subsection*{Dimensions}
+For a single training examples, the dimensions of various quantities are:
+\begin{itemize}
+    \item $X^{[0]} = (n^{[0]},1)$
+    \item $w^{[L]} =(n^{[L]},n^{[L-1]})$
+    \item $b^{[L]} =(n^{[L]},1)$
+    \item $z^{[L]} =(n^{[L]},1)$
+    \item $a^{[L]} =(n^{[L-1]},1)$
+\end{itemize}
+For $m$ training examples, the dimensions are:
+\begin{itemize}
+    \item $X^{[0]} = (n^{[0]},m)$
+    \item $W^{[L]} =(n^{[L]},n^{[L-1]})$
+    \item $B^{[L]} =(n^{[L]},1)$
+    \item $Z^{[L]} =(n^{[L]},m)$
+    \item $A^{[L]} =(n^{[L-1]},m)$
+\end{itemize}
+\mynote{Note that all the quantities are capitalised in the second case, to differentiate them from the single training example case.}
 
+\subsection{Deep Neural Networks}
+Deep neural networks simply have more hidden layers than the normal neural networks, which is also known as shallow neural networks. Circuit theory says that the functions which you can compute with a deep L-layer NN, require exponentially more hidden units in a shallow L-layer NN. Hence, deep neural networks are preferred over shallow neural networks for complex tasks.\\
+To accurately predict the output, the weights and biases of the neural network need to be trained. This is done by the process of forward and backward propagation.
+\subsubsection{Initialization of parameters}
+The weight and bias matrices are initialised randomly with the appropriate shapes, as zero initialisation would symmetrise the whole NN. This would simplify the whole NN to just a linear model, which is not desired.
+\subsubsection{Forward Propagation}
+Forward propagation is when the input is passed through the NN, layer by layer, till it reaches the final or output layer. This step comprises of calculating the $A^{[L]}$ and $Z^{[L]}$ for each layer, and $\hat{Y}$, which is the output at the end of forward prop. These values are also stored in cache, as they would be required to calculate the gradients later in backward propagation. This would help to not waste time or computational power, calculating these terms again.\\
+\begin{equation}
+    Z^{[L]} = W^{[L]}A^{[L-1]} + B^{[L]}
+\end{equation}
+\begin{equation}
+    A^{[L]} = g(Z^{[L]})
+\end{equation}
+\begin{equation}
+    \hat{Y} = A^{[L]}
+\end{equation}
+\newpage
+\subsubsection{Cost function}
+If the label of the training example is $Y$, and the output of forward propagation is $\hat{Y}$, then the cost function $J$ is defined as:
+\begin{equation}
+    J = \frac{1}{m} \sum_{i=1}^{m} L(\hat{Y^{(i)}},Y^{(i)})
+\end{equation}
+Here, L can be the mean squared error or the cross-entropy loss. Mean squared error is usually used for regression tasks, while cross-entropy loss is used for classification tasks. 
+\subsubsection{Backward Propagation}
+Backward propagation is then process of updating the weight and bias matrices of each layer, such that the cost function is minimised.\\
+First the gradients of the cost function with respect to the weight and bias matrices need to be calculated. This is done by going backwards from the output layer towards the input layer and essentially applying chain rule to calculate the deriatives.\\
+Let $dQ^{[L]} = \frac{\partial J}{\partial Q^{[L]}}$, where $Q^{[[L]]}$ is any quantity in the $L^{th}$ layer. Then, the gradients can be calculated as:
+\begin{equation}
+    dZ^{[L]} = dA^{[L]} * (g^{[L]})'(Z^{[L]})
+\end{equation}
+\begin{equation}
+    dW^{[L]} = \frac{1}{m} dZ^{[L]}*(A^{[L-1]})^T
+\end{equation}
+\begin{equation}
+    dB^{[L]} = \frac{1}{m} \sum_{i=1}^{m} dZ^{[L](i)}
+\end{equation}
+\begin{equation}
+    dA^{[L-1]} = (W^{[L]})^T*dZ^{[L]}
+\end{equation}
 
+\mynote{Note that all the multiplication is element-wise multiplication.}
+
+This is where the cache we stored in the forward pass comes into play as we can see in the above equations.\\
+Next, we update the weight and bias matrices as:
+\begin{equation}
+    W^{[L]} = W^{[L]} - \alpha * dW^{[L]}
+\end{equation}
+\begin{equation}
+    B^{[L]} = B^{[L]} - \alpha * dB^{[L]}
+\end{equation}
+
+\subsubsection{Prediction}
+Once the sufficient number of iterations of forward and backward passes are done, such that the cost function is minimised, the model can be tested on the dev set. The dev set is the set which is used to test the performance of the model, before testing it on the test set. The test input is passed through the NN and the output is compared with the actual label to get the accuracy of the model.\\
+\begin{equation}
+    \text{Accuracy} = \frac{\text{Number of correct predictions}}{\text{Total number of predictions}}   
+\end{equation}
+\newpage
+\section{Overfitting and Underfitting}
+Now that, we have the base model of the neural network, we can work towards improving it, so that it can work better on sets other than the training set too.\\
+
+As covered in section \ref{bias-variance}, overfitting is usually caused by high variance and underfitting is caused by high bias.\\
+One of method of identifying if the model is overfitting or underfitting is to check its performance on the dev test and compare it with the train set.
+\begin{center}
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            Train set error & Dev set error & Model\\
+            \hline
+            Low(1\%) & High(11\%) & High variance\\
+            High(15\%) & High(16\%) & High bias\\
+            High(15\%) & Very High(30\%) & High bias and high variance\\
+            Low(0.5\%) & Low(1\%) & Low bias and low variance\\
+            \hline
+        \end{tabular}
+        \label{tab:my_label}
+    \end{table}
+\end{center}
+
+As we can see from the table, high bias is based on the train set error, while high variance is based on the dev set error. Higher bias can be solved by a bigger network, or by training the model for a longer time or using a different NN architecture all together. High variance can be solved by using more data, regularisation, or by using a simpler model.\\
+Lets go over some techniques to reduce overfitting.
+\subsection{Regularisation}
+Regularisation is a technique where the cost function of the model is modified such that it minimises the weights. \\
+For example, in the case of logistic regression, the modified cost function would be:
+\begin{equation}
+    J(w,b) = \frac{1}{m} \sum(L(\hat{y}^{(i)},y^{(i)})) + \frac{\lambda}{2m} \norm{w}^2_2
+\end{equation}
+where $\lambda > 0$ is the regularisation parameter and $\norm{w}^2_2 = \sum_{j=1}^{n} w_j^2 = w^Tw$, is called the Euclidean norm of the weight vector. This regularisation is also known as L2 regularisation.\\
+Now, the model in the process of reducing $J$, would also reduce the  regularisation term, $\frac{\lambda}{2m} \norm{w}^2_2$, thus reducing each individual weight. 
+One can also use L1 regularisation, where the regularisation term would be $\frac{\lambda}{2m} \norm{w}_1 = \sum_{j=1}^{n} |w_j|$, though L2 regularisation is more commonly used.\\
+\mynote{The bias regularisation term is usually ignored as it is the intercept term and does not actively contribute to the overfitting of the model. Morever, penalising the bias term can lead to shifting of the model, which is not desired.}
+For Neural Networks, the cost function would usually be:
+\begin{equation}
+    J = \frac{1}{m} \sum_{i=1}^{m} L(\hat{Y^{(i)}},Y^{(i)}) + \frac{\lambda}{2m} \sum_{l=1}^{L} \norm{W^{[l]}}^2_F
+\end{equation} 
+Here, $\norm{W^{[l]}}^2_F = \sum_{i=1}^{n^{[l]}} \sum_{j=1}^{n^{[l-1]}} (W^{[l]}_{ij})^2$, is the Frobenius norm of the weight matrix.\\
+For back propagation, $dW^{[l]}=dW^{[l]}_{bp} + \frac{\lambda}{m} W^{[l]}$ is the modified gradient, where $dW^{[l]}_{bp}$ is the gradient calculated in the back propagation step.\\
+\newpage
+After updating the weight matrix, the new matrix would be:
+\begin{equation}
+    \begin{aligned}
+        W^{[l]} & = W^{[l]} - \alpha dW^{[l]}\\
+          & = W^{[l]} - \alpha dW^{[l]}_{bp} - \frac{\lambda}{m} W^{[l]}\\
+          & = (1-\frac{\alpha \lambda}{m})W^{[l]} - \alpha dW^{[l]}_{bp}
+      \end{aligned}
+\end{equation}
+As we can observe, the weight matrix is multiplied by a factor $(1-\frac{\alpha \lambda}{m})$, which is less than 1, thus reducing the weight matrix at each iteration. This is known as \textbf{weight decay}.\\
+Therefore $\lambda$ is increased, $W^{[l]}$ would be reduced more. Since $Z^{[l]} = W^{[l]}A^{[l-1]} + B^{[l]}$, $Z^{[l]}$ would also be reduced. If we consider the tanh or sigmoid activation function, it is linear at low values of $Z^{[l]}$. A linear function is would make the model simpler and thus reduce the variance and overfitting.\\
+\subsection{Dropout}
+Dropout is another regularisation technique, where a fixed number or proportion of neurons, which is hyperparameter, are randomly dropped out or removed dring training. This ensures that the model does not rely more on any one neuron or feature, thus shrinking the weight matrix.\\
+\textbf{Inverted Dropout} is a variation of dropout. Let \texttt{keep\_prob} be the probability of keeping a neuron. Then, in inverted dropout, the remaining neurons after removing the dropout neurons are scaled down by a factor of \texttt{keep\_prob}. This is done to ensure so that the expected value of the output remains same.\\
+\texttt{keep\_prob} is usually set to 0.8 for hidden layers and 1 for the input layer. However it can be set differently for different layers. If a layer has a bigger weight matrix, then a smaller \texttt{keep\_prob} can be set to apply dropout.\\
+
+\mynote{Dropout is not applied for test set}
+
+\subsection{Data Augmentation}
+Data augmentation is another technique by which we can increase the training set by applying transformations to the existing training data. \\
+Some common transformations for images are rotation, inversion, crop or distortion. This basically adds noise to the training data, which helps in generalising the model.\\
+
+\subsection{Early Stopping}
+While theoritically, the learning curve for dev test should decrease with time, however in practice, it does tend to increase after a certain number of iterations, due to overfitting. Early stopping is a technique where the training is stopped when the dev set error starts to increase. 
+\newpage
+\subsection{Normalization}
+Normalization is a method where all the features in the input data are scaled to the same order. This helps in giving equal importance to all features and reducing overfitting.\\
+For input $x=[x_1,x_2,\dots,x_n]$, the normalized input $x'=<x'_1,x'_2,\dots,x'_n>$ is given by:
+\begin{equation}
+    x'_i = \frac{x_i-\mu_i}{\sigma_i}
+\end{equation}
+where $\mu_i = \frac{1}{m} \sum_{i=1}^{m} x^{(i)}$ and $\sigma_i = \sqrt{\frac{1}{m} \sum_{i=1}^{m} (x^{(i)}-\mu_i)^2}$\\
+After normalization, the variance of every feature becomes same and the mean becomes zero. This also helps in making the gradient descent faster.\\
+
+\subsection{Weight initialisation}
+Weight initialisation in a certain way can also help in reducing vanishing/exploding gradients and in turn overfitting.\\
+\subsubsection*{Vanishing and Exploding gradients}
+Since, the gradients in back propagation are calculated by chain rule, and thus multiplied at every layer. In a very deep NN, the gradients can explode (become very large) or vanish(tend to zero). 
+To prevent this, weights can be initialised randomly first and then scaled by a factor of $\sqrt{\frac{2}{n^{[l-1]}}}$, where $n^{[l-1]}$ is the number of neurons in the previous layer. This is known as \textbf{He initialisation}. It is used when the activation function used is ReLU.\\
+For tanh activation function, the scaling factor is $\sqrt{\frac{1}{n^{[l-1]}}}$, which is known as \textbf{Xavier initialisation}.\\
+He/Xavier initialisation usually performs better than random initialisation and zero initialisation.\\
+
+\section{Optimization Algorithms}
+\subsection{Mini-Batch Gradient Descent}
+Mini-batch gradient descent is a variation of gradient descent, where the training set is divided into smaller batches. In normal gradient descent, the weight and bias matrices are updated after one epoch i.e. one pass through the training set. However, in mini-batch gradient descent, these matrices are updated after each mini-batch is passed through the NN, i.e. one epoch per mini-batch.\\
+Mini-batch size is a hyperparameter. When mini-batch size is equal to $m$, it is known as batch gradient descent, which is the normal gradient descent which have read before and is used for smaller training sets. When mini-batch size is equal to 1, it is called stochastic gradient descent.\\
+As the mini-batch size decreases, the learning curve becomes more noisy, but the convergence is faster. However, if the size becomes too small, the model can infact be slower and might never converge.\\
+Typical mini-batch sizes are usually powers of 2 like 64, 128, 256, 512.\\
+
+\subsection{Gradient Descent with Momentum}
+Gradient descent with momentum, is a technique where the updation depends not only the current weight and bias matrices, but also on the previous gradients.\\
+The first step is to understand the concept of EMAs or Exponential Moving Averages.
+\subsubsection*{Exponential Moving Averages}
+Let $\theta_t$ be the value of a term at $t$ and $1 \ge \beta \ge 0$ be a constant. Then the EMA of $\theta_t$ for the period of $p$ days is given by:
+\begin{equation}
+    V_t = \beta V_{t-1} + (1-\beta) \theta_t
+\end{equation}
+Approximately, $p = \frac{1}{1-\beta}$, it is averaging over the last $\frac{1}{1-\beta}$ days.\\
+\paragraph{Bias Correction: }At the initial stage, i.e. close to $t=0$, the EMA tends to be biased towards zero, even when the value of $\theta_t$ is high. To correct this bias, the EMA is scaled down by a factor of $\frac{1}{1-\beta^t}$. Hence, at small $t$, the EMAs are inflated negating the earlier effect. At large $t$, the denominator tends to 1, which is the normal EMA.\\
+
+\subsubsection*{Momentum}
+On each iteration $t$, the $dW$ and $dB$ are calculated for each mini-batch. The weight and bias matrices are then updated as:
+\begin{equation}
+    V_{dW} = \beta V_{dW} + (1-\beta) dW
+\end{equation}
+\begin{equation}
+    V_{dB} = \beta V_{dB} + (1-\beta) dB
+\end{equation}
+\begin{equation}
+    W = W - \alpha V_{dW}
+\end{equation}
+\begin{equation}
+    B = B - \alpha V_{dB}
+\end{equation}
+
+Momentum smoothens out the oscillations in GD by carrying the "momentum" from the previous gradient, thus making gradient descent faster.\\
+
+\subsection{RMSprop}
+RMSprop is another optimization algorithm, where the weight and bias matrices are updated differently than the normal GD.\\
+At iteration $t$, the updation after calculating $dW$ and $db$ is as follows:
+\begin{equation}
+    S_{dW} = \beta S_{dW} + (1-\beta) dW^2
+\end{equation}
+\begin{equation}
+    S_{dB} = \beta S_{dB} + (1-\beta) dB^2
+\end{equation}
+\begin{equation}
+    W = W - \alpha \frac{dW}{\sqrt{S_{dW}}}
+\end{equation}
+\begin{equation}
+    B = B - \alpha \frac{dB}{\sqrt{S_{dB}}}
+\end{equation}
+\newpage
+\begin{figure*}[h]
+    \centering
+    \includegraphics[width=15cm]{rmsprop.jpeg}
+    \caption{Oscillations in gradient descent}
+\end{figure*}
+RMSprop essentially aims to restrict the oscillations in the vertical direction. This would increase the learnign rate and the algorithm cna take larger steps in the horizontal direction, thus converging much faster than normal gradient descent.\\
 
 
 
